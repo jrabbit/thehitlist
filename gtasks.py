@@ -96,9 +96,8 @@ Example:
  
 Evgeny Pavlov, http://evgeny.tel"""
  
-if __name__ == "__main__":
+def gtasks(email, password, bullet, verbose = 0):
     # Arguments
-    (email, password, bullet) = main(sys.argv[1:])
  
     # Google Account or Google Apps
     email_split = email.split('@')
@@ -174,6 +173,7 @@ if __name__ == "__main__":
         tasks_in_tr = re.findall(r'<tr(.*?)tr>', list_content_split, re.IGNORECASE | re.DOTALL)
  
         # Work with this dirty tasks
+        tasks = []
         for task_in_tr in tasks_in_tr:
             # Retrieve task
             task_obj = re.search(r'<td class="text">(.*?)</td>', task_in_tr, re.IGNORECASE)
@@ -185,7 +185,16 @@ if __name__ == "__main__":
             # HTML entities
             task = unescape(task)
             task = task.strip()
- 
-            # 5. At last output
             if task  != '': 
-                print '  ' * indent, bullet, task
+                tasks.append(task)
+                if verbose:
+                    print '  ' * indent, bullet, task
+            
+    return tasks
+ 
+ 
+if __name__ == "__main__":
+    (email, password, bullet) = main(sys.argv[1:])
+    verbose = 1
+    gtasks(email, password, bullet, verbose)
+            
